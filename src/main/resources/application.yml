@@ -1,20 +1,6 @@
 server:
   port: ${APP_PORT:8093}
 
-spring:
-  config:
-    import: optional:file:.env[.properties]
-  datasource:
-    url: ${SPRING_DATASOURCE_URL}
-    username: ${SPRING_DATASOURCE_USERNAME}
-    password: ${SPRING_DATASOURCE_PASSWORD}
-    driver-class-name: com.mysql.cj.jdbc.Driver
-
-  jpa:
-    hibernate:
-      ddl-auto: create-drop
-    show-sql: true
-    properties:
-      hibernate:
-        format_sql: true
-        dialect: org.hibernate.dialect.MySQLDialect
+kpi:
+  service:
+    url: ${KPI_SERVICE_URL:http://localhost:8092}
