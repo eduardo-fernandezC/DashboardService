@@ -66,50 +66,50 @@ public class KpiClient {
     }
 
     public ProductoKpi getProductoMasVendido() {
-        return webClient.get()
-                .uri("/api/v1/kpis/producto-mas-vendido")
-                .retrieve()
-                .bodyToMono(ProductoKpi.class)
-                .block();
+        return getBody("/api/v1/kpis/producto-mas-vendido", ProductoKpi.class);
     }
 
     public ProductoKpi getProductoMenosVendido() {
-        return webClient.get()
-                .uri("/api/v1/kpis/producto-menos-vendido")
-                .retrieve()
-                .bodyToMono(ProductoKpi.class)
-                .block();
+        return getBody("/api/v1/kpis/producto-menos-vendido", ProductoKpi.class);
     }
 
     public List<MejorVendedorSucursalKpi> getMejorVendedorPorSucursal() {
-        return webClient.get()
-                .uri("/api/v1/kpis/mejor-vendedor-sucursal")
-                .retrieve()
-                .bodyToMono(new ParameterizedTypeReference<List<MejorVendedorSucursalKpi>>() {
-                })
-                .block();
+        return getBody(
+            "/api/v1/kpis/mejor-vendedor-sucursal",
+            new ParameterizedTypeReference<List<MejorVendedorSucursalKpi>>() {
+            });
     }
 
     public Map<String, SucursalKpi> getRendimientoSucursales() {
-        return webClient.get()
-                .uri("/api/v1/kpis/sucursal-rendimiento")
-                .retrieve()
-                .bodyToMono(new ParameterizedTypeReference<Map<String, SucursalKpi>>() {
-                })
-                .block();
+        return getBody(
+            "/api/v1/kpis/sucursal-rendimiento",
+            new ParameterizedTypeReference<Map<String, SucursalKpi>>() {
+            });
     }
 
     private Double getKpiValor(String uri) {
-        KpiResponse response = webClient.get()
-                .uri(uri)
-                .retrieve()
-                .bodyToMono(KpiResponse.class)
-                .block();
+        KpiResponse response = getBody(uri, KpiResponse.class);
 
         if (response == null || response.getValor() == null) {
             return 0d;
         }
 
         return response.getValor();
+    }
+
+    private <T> T getBody(String uri, Class<T> bodyType) {
+        return webClient.get()
+                .uri(uri)
+                .retrieve()
+                .bodyToMono(bodyType)
+                .block();
+    }
+
+    private <T> T getBody(String uri, ParameterizedTypeReference<T> bodyType) {
+        return webClient.get()
+                .uri(uri)
+                .retrieve()
+                .bodyToMono(bodyType)
+                .block();
     }
 }
