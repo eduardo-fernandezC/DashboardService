@@ -11,6 +11,6 @@ import lombok.Setter;
 @NoArgsConstructor
 public class ProductoKpi {
 
-    private String nombre;
+    private String nombreProducto;
     private Integer cantidad;
 }
