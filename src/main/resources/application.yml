@@ -1,6 +1,6 @@
 server:
-  port: ${APP_PORT:8093}
+  port: 8093
 
 kpi:
   service:
-    url: ${KPI_SERVICE_URL:http://localhost:8092}
+    url: ${KPI_SERVICE_URL}
