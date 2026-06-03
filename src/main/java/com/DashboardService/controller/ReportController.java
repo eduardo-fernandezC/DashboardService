@@ -15,6 +15,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
 import com.DashboardService.service.PdfGeneratorService;
+import com.DashboardService.dto.ProductReportResponse;
 
 @RestController
 @RequestMapping("/api/v1/reports")
@@ -50,6 +51,35 @@ public class ReportController {
         headers.add(
                 "Content-Disposition",
                 "attachment; filename=reporte-ejecutivo.pdf");
+
+        return ResponseEntity
+                .ok()
+                .headers(headers)
+                .contentType(MediaType.APPLICATION_PDF)
+                .body(new InputStreamResource(pdf));
+    }
+
+    @GetMapping("/products")
+    public ProductReportResponse getProductsReport() {
+
+        return dashboardService.getProductsReport();
+    }
+
+    @GetMapping("/products/pdf")
+    public ResponseEntity<InputStreamResource> descargarReporteProductos() {
+
+        ProductReportResponse reporte =
+                dashboardService.getProductsReport();
+
+        ByteArrayInputStream pdf =
+                pdfGeneratorService
+                        .generarReporteProductos(reporte);
+
+        HttpHeaders headers = new HttpHeaders();
+
+        headers.add(
+                "Content-Disposition",
+                "attachment; filename=reporte-productos.pdf");
 
         return ResponseEntity
                 .ok()

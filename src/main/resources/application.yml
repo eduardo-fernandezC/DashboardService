@@ -4,3 +4,7 @@ server:
 kpi:
   service:
     url: ${KPI_SERVICE_URL}
+
+data:
+  service:
+    url: ${DATA_SERVICE_URL}
