@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 
 import com.DashboardService.service.PdfGeneratorService;
 import com.DashboardService.dto.ProductReportResponse;
+import com.DashboardService.dto.SalesReportResponse;
 
 @RestController
 @RequestMapping("/api/v1/reports")
@@ -87,4 +88,34 @@ public class ReportController {
                 .contentType(MediaType.APPLICATION_PDF)
                 .body(new InputStreamResource(pdf));
     }
+    
+    @GetMapping("/sales")
+        public SalesReportResponse getSalesReport() {
+
+        return dashboardService.getSalesReport();
+    }
+
+    @GetMapping("/sales/pdf")
+        public ResponseEntity<InputStreamResource> descargarReporteVentas() {
+
+        SalesReportResponse reporte =
+                dashboardService.getSalesReport();
+
+        ByteArrayInputStream pdf =
+                pdfGeneratorService
+                        .generarReporteVentas(reporte);
+
+        HttpHeaders headers = new HttpHeaders();
+
+        headers.add(
+                "Content-Disposition",
+                "attachment; filename=reporte-ventas.pdf");
+
+        return ResponseEntity
+                .ok()
+                .headers(headers)
+                .contentType(MediaType.APPLICATION_PDF)
+                .body(new InputStreamResource(pdf));
+     }
+    
 }
