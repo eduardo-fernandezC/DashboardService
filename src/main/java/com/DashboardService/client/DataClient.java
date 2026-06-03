@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import com.DashboardService.dto.ProductoResponse;
+import com.DashboardService.dto.VentaResponse;
 
 @Component
 public class DataClient {
@@ -33,6 +34,20 @@ public class DataClient {
 
         return productos != null
                 ? productos
+                : List.of();
+    }
+
+    public List<VentaResponse> getVentas() {
+
+        List<VentaResponse> ventas = webClient.get()
+                .uri("/api/v1/ventas")
+                .retrieve()
+                .bodyToFlux(VentaResponse.class)
+                .collectList()
+                .block();
+
+        return ventas != null
+                ? ventas
                 : List.of();
     }
 }

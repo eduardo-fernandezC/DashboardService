@@ -11,7 +11,9 @@ import java.time.LocalDate;
 import com.DashboardService.dto.ExecutiveReportResponse;
 import com.DashboardService.dto.ProductReportResponse;
 import com.DashboardService.dto.ProductoKpi;
+import com.DashboardService.dto.SalesReportResponse;
 import com.DashboardService.dto.SucursalKpi;
+import com.DashboardService.dto.VentaResponse;
 
 @Service
 public class DashboardService {
@@ -79,5 +81,25 @@ public class DashboardService {
                 java.time.LocalDate.now(),
                 productos.size(),
                 productos);
+    }
+
+    public SalesReportResponse getSalesReport() {
+
+        var ventas = dataClient.getVentas();
+
+        double totalVentas = ventas.stream()
+                .mapToDouble(VentaResponse::getTotal)
+                .sum();
+
+        double promedio = ventas.isEmpty()
+                ? 0
+                : totalVentas / ventas.size();
+
+        return new SalesReportResponse(
+                java.time.LocalDate.now(),
+                ventas.size(),
+                totalVentas,
+                promedio,
+                ventas);
     }
 }

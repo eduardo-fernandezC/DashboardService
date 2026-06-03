@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 import com.DashboardService.dto.ExecutiveReportResponse;
 import com.DashboardService.dto.ProductReportResponse;
 import com.DashboardService.dto.ProductoResponse;
+import com.DashboardService.dto.SalesReportResponse;
+import com.DashboardService.dto.VentaResponse;
 import com.lowagie.text.Document;
 import com.lowagie.text.Font;
 import com.lowagie.text.Paragraph;
@@ -213,4 +215,129 @@ public class PdfGeneratorService {
         return new ByteArrayInputStream(
                 out.toByteArray());
         }
+
+     public ByteArrayInputStream generarReporteVentas(
+        SalesReportResponse reporte) {
+
+        Document document = new Document();
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+
+        try {
+
+                PdfWriter.getInstance(document, out);
+
+                document.open();
+
+                Font titulo = new Font(
+                        Font.HELVETICA,
+                        18,
+                        Font.BOLD);
+
+                Paragraph encabezado =
+                        new Paragraph(
+                                "GRUPO CORDILLERA",
+                                titulo);
+
+                encabezado.setAlignment(
+                        Paragraph.ALIGN_CENTER);
+
+                document.add(encabezado);
+
+                document.add(new Paragraph(" "));
+
+                Paragraph subtitulo =
+                        new Paragraph(
+                                "REPORTE DE VENTAS",
+                                titulo);
+
+                subtitulo.setAlignment(
+                        Paragraph.ALIGN_CENTER);
+
+                document.add(subtitulo);
+
+                document.add(new Paragraph(" "));
+
+                document.add(
+                        new Paragraph(
+                                "Fecha: "
+                                        + reporte.getFechaReporte()));
+
+                document.add(new Paragraph(" "));
+
+                PdfPTable table = new PdfPTable(4);
+
+                table.setWidthPercentage(100);
+
+                table.addCell(
+                        new PdfPCell(
+                                new Paragraph("FECHA")));
+
+                table.addCell(
+                        new PdfPCell(
+                                new Paragraph("SUCURSAL")));
+
+                table.addCell(
+                        new PdfPCell(
+                                new Paragraph("VENDEDOR")));
+
+                table.addCell(
+                        new PdfPCell(
+                                new Paragraph("TOTAL")));
+
+                NumberFormat formato =
+                        NumberFormat.getCurrencyInstance(
+                                new Locale("es", "CL"));
+
+                for (VentaResponse venta : reporte.getVentas()) {
+
+                table.addCell(
+                        venta.getFecha());
+
+                table.addCell(
+                        venta.getSucursal()
+                                .getNombre());
+
+                table.addCell(
+                        venta.getEmpleado()
+                                .getNombre());
+
+                table.addCell(
+                        formato.format(
+                                venta.getTotal()));
+                }
+
+                document.add(table);
+
+                document.add(new Paragraph(" "));
+
+                document.add(
+                        new Paragraph(
+                                "Cantidad Ventas: "
+                                        + reporte.getCantidadVentas()));
+
+                document.add(
+                        new Paragraph(
+                                "Ventas Totales: "
+                                        + formato.format(
+                                                reporte.getVentasTotales())));
+
+                document.add(
+                        new Paragraph(
+                                "Promedio Venta: "
+                                        + formato.format(
+                                                reporte.getPromedioVenta())));
+
+                document.close();
+
+        } catch (Exception e) {
+
+                throw new RuntimeException(
+                        "Error al generar PDF",
+                        e);
+        }
+
+        return new ByteArrayInputStream(
+                out.toByteArray());
+        }   
 }
