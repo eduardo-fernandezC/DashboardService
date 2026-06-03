@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.DashboardService.dto.ExecutiveReportResponse;
+import com.DashboardService.dto.FullReportResponse;
 import com.DashboardService.service.DashboardService;
 
 import java.io.ByteArrayInputStream;
@@ -110,6 +111,35 @@ public class ReportController {
         headers.add(
                 "Content-Disposition",
                 "attachment; filename=reporte-ventas.pdf");
+
+        return ResponseEntity
+                .ok()
+                .headers(headers)
+                .contentType(MediaType.APPLICATION_PDF)
+                .body(new InputStreamResource(pdf));
+     }
+
+     @GetMapping("/full")
+        public FullReportResponse getFullReport() {
+
+        return dashboardService.getFullReport();
+     }
+
+     @GetMapping("/full/pdf")
+        public ResponseEntity<InputStreamResource> descargarReporteCompleto() {
+
+        FullReportResponse reporte =
+                dashboardService.getFullReport();
+
+        ByteArrayInputStream pdf =
+                pdfGeneratorService
+                        .generarReporteCompleto(reporte);
+
+        HttpHeaders headers = new HttpHeaders();
+
+        headers.add(
+                "Content-Disposition",
+                "attachment; filename=reporte-general.pdf");
 
         return ResponseEntity
                 .ok()
