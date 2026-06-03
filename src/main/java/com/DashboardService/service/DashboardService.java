@@ -2,12 +2,14 @@ package com.DashboardService.service;
 
 import org.springframework.stereotype.Service;
 
+import com.DashboardService.client.DataClient;
 import com.DashboardService.client.KpiClient;
 import com.DashboardService.dto.DashboardResponse;
 
 import java.time.LocalDate;
 
 import com.DashboardService.dto.ExecutiveReportResponse;
+import com.DashboardService.dto.ProductReportResponse;
 import com.DashboardService.dto.ProductoKpi;
 import com.DashboardService.dto.SucursalKpi;
 
@@ -15,9 +17,11 @@ import com.DashboardService.dto.SucursalKpi;
 public class DashboardService {
 
     private final KpiClient kpiClient;
+    private final DataClient dataClient;
 
-    public DashboardService(KpiClient kpiClient) {
+    public DashboardService(KpiClient kpiClient, DataClient dataClient) {
         this.kpiClient = kpiClient;
+        this.dataClient = dataClient;
     }
 
     public DashboardResponse getDashboard() {
@@ -65,5 +69,15 @@ public class DashboardService {
                 mejorSucursal != null
                         ? mejorSucursal.getSucursal()
                         : "Sin datos");
+    }
+
+    public ProductReportResponse getProductsReport() {
+
+        var productos = dataClient.getProductos();
+
+        return new ProductReportResponse(
+                java.time.LocalDate.now(),
+                productos.size(),
+                productos);
     }
 }
