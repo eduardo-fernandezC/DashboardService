@@ -9,6 +9,7 @@ import com.DashboardService.dto.DashboardResponse;
 import java.time.LocalDate;
 
 import com.DashboardService.dto.ExecutiveReportResponse;
+import com.DashboardService.dto.FullReportResponse;
 import com.DashboardService.dto.ProductReportResponse;
 import com.DashboardService.dto.ProductoKpi;
 import com.DashboardService.dto.SalesReportResponse;
@@ -101,5 +102,13 @@ public class DashboardService {
                 totalVentas,
                 promedio,
                 ventas);
+    }
+
+    public FullReportResponse getFullReport() {
+
+        return new FullReportResponse(
+                getExecutiveReport(),
+                getProductsReport(),
+                getSalesReport());
     }
 }
