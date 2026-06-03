@@ -5,6 +5,12 @@ import org.springframework.stereotype.Service;
 import com.DashboardService.client.KpiClient;
 import com.DashboardService.dto.DashboardResponse;
 
+import java.time.LocalDate;
+
+import com.DashboardService.dto.ExecutiveReportResponse;
+import com.DashboardService.dto.ProductoKpi;
+import com.DashboardService.dto.SucursalKpi;
+
 @Service
 public class DashboardService {
 
@@ -39,5 +45,25 @@ public class DashboardService {
         response.setRendimientoSucursales(kpiClient.getRendimientoSucursales());
 
         return response;
+    }
+
+    public ExecutiveReportResponse getExecutiveReport() {
+
+        ProductoKpi producto = kpiClient.getProductoMasVendido();
+
+        SucursalKpi mejorSucursal = kpiClient
+                .getRendimientoSucursales()
+                .get("mayor");
+
+        return new ExecutiveReportResponse(
+                LocalDate.now(),
+                kpiClient.getVentasTotales(),
+                kpiClient.getCantidadVentas(),
+                producto != null
+                        ? producto.getNombreProducto()
+                        : "Sin datos",
+                mejorSucursal != null
+                        ? mejorSucursal.getSucursal()
+                        : "Sin datos");
     }
 }
