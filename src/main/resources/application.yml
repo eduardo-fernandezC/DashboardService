@@ -1,6 +1,10 @@
 server:
-  port: 8093
+  port: ${PORT:8080}
 
 kpi:
   service:
     url: ${KPI_SERVICE_URL}
+
+data:
+  service:
+    url: ${DATA_SERVICE_URL}
